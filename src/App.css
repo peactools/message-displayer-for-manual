@@ -36,3 +36,23 @@
     transform: rotate(360deg);
   }
 }
+
+input[type='text'] {
+  padding: 10px;
+  margin: 10px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+div {
+  margin-top: 10px;
+}
+
+textarea {
+  width: '90%'
+}
