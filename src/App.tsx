@@ -52,7 +52,7 @@ function App() {
         Message formatter for manual
         <input type="text" value={inputValue} onChange={handleInputChange} style={{width: '89%'}}/>
         <button onClick={handleButtonClick}>Format</button>
-        <textarea readOnly value={splitData.join('').replace(/\n\n+/, "\n")} style={{width: '90%', height: '75vh'}} />
+        <textarea readOnly value={splitData.join('').replace(/\n\n+/, "\n").replace(/\n/gm, " +\n").replace(/ \+\n$/, '')} style={{width: '90%', height: '75vh'}} />
       </header>
     </div>
   );
