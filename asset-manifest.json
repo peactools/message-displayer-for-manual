@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/message-displayer-for-manual/static/css/main.ac827e2b.css",
+    "main.js": "/message-displayer-for-manual/static/js/main.5fcba376.js",
+    "static/js/787.66b05dc2.chunk.js": "/message-displayer-for-manual/static/js/787.66b05dc2.chunk.js",
+    "index.html": "/message-displayer-for-manual/index.html",
+    "main.ac827e2b.css.map": "/message-displayer-for-manual/static/css/main.ac827e2b.css.map",
+    "main.5fcba376.js.map": "/message-displayer-for-manual/static/js/main.5fcba376.js.map",
+    "787.66b05dc2.chunk.js.map": "/message-displayer-for-manual/static/js/787.66b05dc2.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ac827e2b.css",
+    "static/js/main.5fcba376.js"
+  ]
+}
