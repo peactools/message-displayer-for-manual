@@ -33,8 +33,8 @@ function App() {
               const index2 = value1.indexOf('=');
               const key2 = value1.substring(0, index2)
               let value2 = value1.substring(index2 + 1)
-              const vv = value2.replace(/###/g, '|').replace(/\|$/, '').split('|').map((c) => '{nbsp}{nbsp}{nbsp}{nbsp}' + c + '\n').join('');
-              return "{nbsp}{nbsp}" + key2 + '=\n' + vv + '\n';
+              const formatedContent = value2.replace(/###/g, '|').replace(/\|$/, '').split('|').map((c) => '{nbsp}{nbsp}{nbsp}{nbsp}' + c + '\n').join('');
+              return "{nbsp}{nbsp}" + key2 + '=\n' + formatedContent + '\n';
             } else {
             return '{nbsp}{nbsp}' + value1 + '\n'
             }
@@ -49,9 +49,9 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        Message disiplayer for manual
+        Message formatter for manual
         <input type="text" value={inputValue} onChange={handleInputChange} style={{width: '89%'}}/>
-        <button onClick={handleButtonClick}>Split</button>
+        <button onClick={handleButtonClick}>Format</button>
         <textarea readOnly value={splitData.join('').replace(/\n\n+/, "\n")} style={{width: '90%', height: '75vh'}} />
       </header>
     </div>
