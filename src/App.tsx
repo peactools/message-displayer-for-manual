@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
   const [inputValue, setInputValue] = useState('');
   const [splitData, setSplitData] = useState<string>('');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const message = params.get('formatmessage');
+    if (message) {
+      setSplitData(formatMessage(false, message));
+      setInputValue(message)
+    }
+  }, []);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -11,22 +20,23 @@ function App() {
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      handleButtonClick(true);
+      handleButtonClick(true, inputValue);
       event.preventDefault(); // Prevent form submission & page reload
     }
   };
 
   const handleButtonClickForGenerateManual = () => {
-    handleButtonClick(true);
+    handleButtonClick(true, inputValue);
   }
 
   const handleButtonClickForDisplay = () => {
-    handleButtonClick(false);
+    handleButtonClick(false, inputValue);
+    window.history.pushState({}, '', `?formatmessage=${encodeURIComponent(inputValue)}`);
   }
 
-  const handleButtonClick = (isAsciidoc: boolean) => {
+  const formatMessage = (isAsciidoc: boolean, input: string) : string => {
     const space : string = isAsciidoc ? '{nbsp}{nbsp}' : '    ';
-    const parts : string[] = inputValue.replace(/\|$/, '').split('|');
+    const parts : string[] = input.replace(/\|$/, '').split('|');
     
     for (let i = 0; i < parts.length; i++) {
       if (isAsciidoc && (parts[i].startsWith('CONVERSATIONID') || parts[i].startsWith('CREATIONTIME') || parts[i].startsWith('PLUGINORIGINATOR') || parts[i].startsWith('PLUGINOWNER') || parts[i].startsWith('ULFROMSESSIONNAME') || parts[i].startsWith('ULTOSESSIONNAME'))) {  
@@ -63,7 +73,11 @@ function App() {
     if (isAsciidoc) {
       result = result.replace(/\n/gm, " +\n").replace(/ \+\n$/, '');
     }
-    setSplitData(result);
+    return result;
+  }
+
+  const handleButtonClick = (isAsciidoc: boolean, input: string) => {
+    setSplitData(formatMessage(isAsciidoc, input));
   };
 
   return (
