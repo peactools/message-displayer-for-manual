@@ -3,7 +3,7 @@ import './App.css';
 
 function App() {
   const [inputValue, setInputValue] = useState('');
-  const [splitData, setSplitData] = useState<string[]>([]);
+  const [splitData, setSplitData] = useState<string>('');
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -11,16 +11,25 @@ function App() {
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      handleButtonClick();
+      handleButtonClick(true);
       event.preventDefault(); // Prevent form submission & page reload
     }
   };
 
-  const handleButtonClick = () => {
+  const handleButtonClickForGenerateManual = () => {
+    handleButtonClick(true);
+  }
+
+  const handleButtonClickForDisplay = () => {
+    handleButtonClick(false);
+  }
+
+  const handleButtonClick = (isAsciidoc: boolean) => {
+    const space : string = isAsciidoc ? '{nbsp}{nbsp}' : '    ';
     const parts : string[] = inputValue.replace(/\|$/, '').split('|');
     
     for (let i = 0; i < parts.length; i++) {
-      if (parts[i].startsWith('CONVERSATIONID') || parts[i].startsWith('CREATIONTIME') || parts[i].startsWith('PLUGINORIGINATOR') || parts[i].startsWith('PLUGINOWNER') || parts[i].startsWith('ULFROMSESSIONNAME') || parts[i].startsWith('ULTOSESSIONNAME')) {  
+      if (isAsciidoc && (parts[i].startsWith('CONVERSATIONID') || parts[i].startsWith('CREATIONTIME') || parts[i].startsWith('PLUGINORIGINATOR') || parts[i].startsWith('PLUGINOWNER') || parts[i].startsWith('ULFROMSESSIONNAME') || parts[i].startsWith('ULTOSESSIONNAME'))) {  
         parts[i] = ''
       } else {
         const index = parts[i].indexOf('=');
@@ -30,7 +39,7 @@ function App() {
           parts[i] = key + '=' + value + '\n';
         }
         else if (!value.includes('')){
-          const values1 = value.replace(//g, '|').replace(/\|$/, '').split('|').map((value1) => '{nbsp}{nbsp}' + value1 + '\n').join('');
+          const values1 = value.replace(//g, '|').replace(/\|$/, '').split('|').map((value1) => space + value1 + '\n').join('');
           parts[i] = key + '=\n' + values1 + '\n';
         }
         else {
@@ -40,26 +49,33 @@ function App() {
               const index2 = value1.indexOf('=');
               const key2 = value1.substring(0, index2)
               let value2 = value1.substring(index2 + 1)
-              const formatedContent = value2.replace(/###/g, '|').replace(/\|$/, '').split('|').map((c) => '{nbsp}{nbsp}{nbsp}{nbsp}' + c + '\n').join('');
-              return "{nbsp}{nbsp}" + key2 + '=\n' + formatedContent + '\n';
+              const formatedContent = value2.replace(/###/g, '|').replace(/\|$/, '').split('|').map((c) => space + space + c + '\n').join('');
+              return space + key2 + '=\n' + formatedContent + '\n';
             } else {
-            return '{nbsp}{nbsp}' + value1 + '\n'
+            return space + value1 + '\n'
             }
           }).join('');
           parts[i] = key + '=\n' + result.replace(/\n\n+/, "\n") + '\n';
         }
       }
     }
-    setSplitData(parts);
+    let result = parts.join('').replace(/\n\n+/, "\n");
+    if (isAsciidoc) {
+      result = result.replace(/\n/gm, " +\n").replace(/ \+\n$/, '');
+    }
+    setSplitData(result);
   };
 
   return (
     <div className="App">
       <header className="App-header">
         Message formatter for manual
-        <input type="text" value={inputValue} onChange={handleInputChange} onKeyPress={handleKeyPress} style={{width: '89%'}}/>
-        <button onClick={handleButtonClick}>Format</button>
-        <textarea readOnly value={splitData.join('').replace(/\n\n+/, "\n").replace(/\n/gm, " +\n").replace(/ \+\n$/, '')} style={{width: '90%', height: '75vh'}} />
+        <input type="text" value={inputValue} onChange={handleInputChange} onKeyPress={handleKeyPress} style={{width: '90%'}}/>
+        <div style={{display: 'flex', justifyContent: 'space-between', width: '200px'}}>
+          <button onClick={handleButtonClickForGenerateManual}>Format</button>
+          <button onClick={handleButtonClickForDisplay}>Display</button>
+        </div>
+        <textarea readOnly value={splitData} style={{width: '90%', height: '75vh'}} />
       </header>
     </div>
   );
