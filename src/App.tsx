@@ -9,6 +9,13 @@ function App() {
     setInputValue(event.target.value);
   };
 
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleButtonClick();
+      event.preventDefault(); // Prevent form submission & page reload
+    }
+  };
+
   const handleButtonClick = () => {
     const parts : string[] = inputValue.replace(/\|$/, '').split('|');
     
@@ -50,7 +57,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         Message formatter for manual
-        <input type="text" value={inputValue} onChange={handleInputChange} style={{width: '89%'}}/>
+        <input type="text" value={inputValue} onChange={handleInputChange} onKeyPress={handleKeyPress} style={{width: '89%'}}/>
         <button onClick={handleButtonClick}>Format</button>
         <textarea readOnly value={splitData.join('').replace(/\n\n+/, "\n").replace(/\n/gm, " +\n").replace(/ \+\n$/, '')} style={{width: '90%', height: '75vh'}} />
       </header>
